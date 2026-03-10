@@ -13,7 +13,7 @@ const (
 	cgroupV2CPUMax    = "/sys/fs/cgroup/cpu.max"
 )
 
-func CPUEffective(readFile ReadFileFunc) (*int64, error) {
+func CPUEffective(readFile ReadFileFunc) (*float64, error) {
 	if readFile == nil {
 		readFile = os.ReadFile
 	}
@@ -28,7 +28,7 @@ func CPUEffective(readFile ReadFileFunc) (*int64, error) {
 	return readCPUV1(readFile)
 }
 
-func readCPUV2(readFile ReadFileFunc) (*int64, error) {
+func readCPUV2(readFile ReadFileFunc) (*float64, error) {
 	data, err := readFile(cgroupV2CPUMax)
 	if err != nil {
 		return nil, fmt.Errorf("reading cgroup v2 cpu.max: %w", err)
@@ -64,7 +64,7 @@ func readCPUV2(readFile ReadFileFunc) (*int64, error) {
 	return &cpus, nil
 }
 
-func readCPUV1(readFile ReadFileFunc) (*int64, error) {
+func readCPUV1(readFile ReadFileFunc) (*float64, error) {
 	quotaData, err := readFile(cgroupV1CPUQuota)
 	if err != nil {
 		return nil, fmt.Errorf("reading cgroup v1 cpu.cfs_quota_us: %w", err)
@@ -78,7 +78,7 @@ func readCPUV1(readFile ReadFileFunc) (*int64, error) {
 
 	// negative -> no quota
 	if quota < 0 {
-		return nil, nil 
+		return nil, nil
 	}
 
 	periodData, err := readFile(cgroupV1CPUPeriod)
