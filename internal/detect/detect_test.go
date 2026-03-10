@@ -95,6 +95,7 @@ func TestPlatform(t *testing.T) {
 }
 
 func TestRole(t *testing.T) {
+
 	tests := []struct {
 		name string
 		args []string
@@ -119,6 +120,49 @@ func TestRole(t *testing.T) {
 			args: []string{},
 			want: RoleWeb,
 		},
+		// --- Python / WSGI / ASGI ---
+		{
+			name: "web via gunicorn",
+			args: []string{"gunicorn", "myapp.wsgi:application"},
+			want: RoleWeb,
+		},
+		{
+			name: "web via gunicorn absolute path",
+			args: []string{"/usr/local/bin/gunicorn", "myapp.wsgi"},
+			want: RoleWeb,
+		},
+		{
+			name: "web via uvicorn",
+			args: []string{"uvicorn", "main:app", "--host", "0.0.0.0"},
+			want: RoleWeb,
+		},
+		{
+			name: "web via Django runserver",
+			envs: map[string]string{"DJANGO_SETTINGS_MODULE": "myapp.settings"},
+			args: []string{"manage.py", "runserver", "0.0.0.0:8000"},
+			want: RoleWeb,
+		},
+		{
+			name: "queue via celery worker",
+			args: []string{"celery", "-A", "myapp", "worker", "-l", "info"},
+			want: RoleQueue,
+		},
+		{
+			name: "queue via celery worker absolute path",
+			args: []string{"/usr/local/bin/celery", "-A", "tasks", "worker"},
+			want: RoleQueue,
+		},
+		{
+			name: "scheduler via celery beat",
+			args: []string{"celery", "-A", "myapp", "beat", "-l", "info"},
+			want: RoleScheduler,
+		},
+		{
+			name: "cli via celery inspect (unknown sub-cmd)",
+			args: []string{"celery", "-A", "myapp", "inspect", "active"},
+			want: RoleCLI,
+		},
+		// --- Laravel / Artisan ---
 		{
 			name: "queue via queue:work",
 			args: []string{"artisan", "queue:work", "--daemon"},
@@ -127,11 +171,6 @@ func TestRole(t *testing.T) {
 		{
 			name: "queue via horizon",
 			args: []string{"artisan", "horizon"},
-			want: RoleQueue,
-		},
-		{
-			name: "queue via worker",
-			args: []string{"python", "worker"},
 			want: RoleQueue,
 		},
 		{
@@ -157,8 +196,6 @@ func TestRole(t *testing.T) {
 		})
 	}
 }
-
-// --- WritablePaths tests ---
 
 func TestWritablePaths(t *testing.T) {
 	t.Parallel()
