@@ -1,0 +1,45 @@
+# Go
+/bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.out
+coverage.html
+
+# Go workspace
+/vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# PHP / Laravel
+adapters/laravel/vendor/
+adapters/laravel/.phpunit.cache/
+adapters/laravel/.phpunit.result.cache
+
+# Python
+adapters/django/__pycache__/
+adapters/django/**/__pycache__/
+adapters/django/*.egg-info/
+adapters/django/.pytest_cache/
+adapters/django/.venv/
+adapters/fastapi/__pycache__/
+adapters/fastapi/**/__pycache__/
+adapters/fastapi/*.egg-info/
+adapters/fastapi/.pytest_cache/
+adapters/fastapi/.venv/
+*.pyc
+*.pyo
+
+# Secrets / env
+.env
+.env.*
+!.env.example
