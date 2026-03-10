@@ -54,4 +54,21 @@ func readMemoryV2(readFile ReadFileFunc) (*int64, error) {
 
 	return &limit, nil
 }
-func readMemoryV1(readFile ReadFileFunc) (*int64, error) {}
+func readMemoryV1(readFile ReadFileFunc) (*int64, error) {
+	data, err := readFile(cgroupV1MemoryLimit)
+	if err != nil {
+		return nil, fmt.Errorf("reading cgroup v1 memory.limit_in_bytes: %w", err)
+	}
+
+	val := strings.TrimSpace(string(data))
+	limit, err := strconv.ParseInt(val, 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("parsing cgroup v1 memory.limit_in_bytes %q: %w", val, err)
+	}
+
+	if limit >= unlimitedThreshold {
+		return nil, nil
+	}
+
+	return &limit, nil
+}
