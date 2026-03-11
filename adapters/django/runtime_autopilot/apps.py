@@ -23,7 +23,11 @@ class RuntimeAutopilotConfig(AppConfig):
             logger.info("runtime-autopilot: AUTOPILOT_DISABLE is set — skipping.")
             return
 
-        dry_run = os.environ.get("AUTOPILOT_DRY_RUN", "").lower() in ("1", "true", "yes")
+        dry_run = os.environ.get("AUTOPILOT_DRY_RUN", "").lower() in (
+            "1",
+            "true",
+            "yes",
+        )
 
         from runtime_autopilot import probe
         import runtime_autopilot as _module
@@ -62,6 +66,7 @@ class RuntimeAutopilotConfig(AppConfig):
 
         try:
             import django_redis  # noqa: F401
+
             has_redis = True
         except ImportError:
             has_redis = False
@@ -78,10 +83,10 @@ class RuntimeAutopilotConfig(AppConfig):
     def _apply_workers(self, profile: object, dry_run: bool) -> None:  # type: ignore[override]
         """Publish worker-count hints as env vars readable by Gunicorn/Celery configs.
 
-        - Role ``web`` + cpu_effective set → AUTOPILOT_GUNICORN_WORKERS
+        - Role ``web`` + cpu_effective set  AUTOPILOT_GUNICORN_WORKERS
           Formula: max(2, floor(cpu_effective * 2))
 
-        - Role ``queue`` + cpu_effective set → AUTOPILOT_CELERY_CONCURRENCY
+        - Role ``queue`` + cpu_effective set AUTOPILOT_CELERY_CONCURRENCY
           Formula: max(1, floor(cpu_effective))
         """
         from runtime_autopilot.profile import RuntimeProfile
@@ -104,7 +109,9 @@ class RuntimeAutopilotConfig(AppConfig):
                 f"queue role with {profile.cpu_effective:.2f} CPUs: "
                 f"setting AUTOPILOT_CELERY_CONCURRENCY={concurrency}",
                 dry_run,
-                lambda: os.environ.update({"AUTOPILOT_CELERY_CONCURRENCY": str(concurrency)}),
+                lambda: os.environ.update(
+                    {"AUTOPILOT_CELERY_CONCURRENCY": str(concurrency)}
+                ),
             )
 
     def _configure_stream_logging(self) -> None:
@@ -122,6 +129,7 @@ class RuntimeAutopilotConfig(AppConfig):
             "root": {"handlers": ["stderr"], "level": "WARNING"},
         }
         import logging.config
+
         logging.config.dictConfig(settings.LOGGING)
 
     def _configure_redis_cache(self) -> None:

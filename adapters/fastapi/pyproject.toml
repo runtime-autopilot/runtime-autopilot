@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fastapi-runtime-autopilot"
+version = "0.1.0"
+description = "FastAPI adapter for runtime-autopilot: lifespan middleware that detects container limits at startup."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "httpx>=0.27",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["runtime_autopilot_fastapi*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
