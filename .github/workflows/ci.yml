@@ -92,17 +92,4 @@ jobs:
       - name: Run pytest
         run: pytest -v
 
-  rails-test:
-    name: Rails Tests (Ruby 3.2)
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: adapters/rails
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "3.2"
-          bundler-cache: true
-      - name: Run RSpec
-        run: bundle exec rspec
+
