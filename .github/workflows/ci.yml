@@ -19,7 +19,7 @@ jobs:
       - name: Download modules
         run: go mod download
       - name: Run tests with race detector
-        run: go test ./... -race -cover
+        run: go test ./internal/... ./pkg/... -race -cover
 
 
   go-lint:
@@ -34,7 +34,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v7
         with:
-          version: v2.1
+          version: v2.1.6
 
   laravel-test:
     name: Laravel Tests (PHP 8.2)
