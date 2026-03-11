@@ -9,6 +9,13 @@ linters:
     - unused
     - ineffassign
     - misspell
+  settings:
+    errcheck:
+      check-blank: false
+  exclusions:
+    rules:
+      - linters: [gosec]
+        text: "G114"
 
 formatters:
   enable:
@@ -18,12 +25,3 @@ formatters:
     goimports:
       local-prefixes:
         - github.com/runtime-autopilot/runtime-autopilot
-
-linters-settings:
-  errcheck:
-    check-blank: false
-
-issues:
-  exclude-rules:
-    - linters: [gosec]
-      text: "G114"
