@@ -19,12 +19,8 @@ jobs:
       - name: Download modules
         run: go mod download
       - name: Run tests with race detector
-        run: go test ./... -race -cover -coverprofile=coverage.out
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: go-coverage
-          path: coverage.out
+        run: go test ./... -race -cover
+
 
   go-lint:
     name: Go Lint
@@ -36,7 +32,7 @@ jobs:
           go-version: "1.24"
           cache: true
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
           version: v2.1
 
@@ -51,7 +47,7 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
-          extensions: json
+          extensions: json, zip
           tools: composer:v2
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
@@ -74,6 +70,8 @@ jobs:
         run: pip install -e ".[dev]"
       - name: Run pytest
         run: pytest -v
+        env:
+          PYTHONPATH: ${{ github.workspace }}/adapters/django
 
   fastapi-test:
     name: FastAPI Tests (Python 3.11)
