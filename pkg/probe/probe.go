@@ -49,7 +49,7 @@ type MemoryDetector struct {
 }
 
 func (detector MemoryDetector) Detect(profile profile.RuntimeProfile) profile.RuntimeProfile {
-	limit, _ := cgroup.MemoryLimitBytes(detector.ReadFile)
+	limit, _ := cgroup.MemoryLimitBytes(detector.ReadFile) //nolint:errcheck
 	profile.MemBytes = limit
 
 	return profile
@@ -60,7 +60,7 @@ type CPUDetector struct {
 }
 
 func (detector CPUDetector) Detect(profile profile.RuntimeProfile) profile.RuntimeProfile {
-	cpus, _ := cgroup.CPUEffective(detector.ReadFile)
+	cpus, _ := cgroup.CPUEffective(detector.ReadFile) //nolint:errcheck 
 	profile.CPUEffective = cpus
 
 	return profile

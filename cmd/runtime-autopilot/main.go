@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
 
+	"github.com/runtime-autopilot/runtime-autopilot/internal/profile"
 	"github.com/runtime-autopilot/runtime-autopilot/pkg/probe"
 )
 
@@ -39,8 +41,8 @@ func main() {
 	}
 }
 
-func writeProfile(write interface{ Write([]byte) (int, error) }, p interface{}, pretty bool) error {
-	enc := json.NewEncoder(write)
+func writeProfile(w io.Writer, p profile.RuntimeProfile, pretty bool) error {
+	enc := json.NewEncoder(w)
 	if pretty {
 		enc.SetIndent("", "  ")
 	}
@@ -53,7 +55,7 @@ func runServer(addr string, pretty bool) {
 		p := probe.Detect()
 		w.Header().Set("Content-Type", "application/json")
 		enc := json.NewEncoder(w)
-
+		
 		if pretty {
 			enc.SetIndent("", "  ")
 		}
