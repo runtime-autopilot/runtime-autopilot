@@ -47,10 +47,12 @@ All adapters look for the binary via `RUNTIME_AUTOPILOT_BIN` (default: `runtime-
 | `AUTOPILOT_DISABLE` | — | Set to `true` to skip detection entirely |
 | `AUTOPILOT_DRY_RUN` | — | Set to `true` to detect but not apply |
 
+> Packages are not yet published to PyPI or Packagist. Install from the repository directly.
+
 ### Django
 
 ```bash
-pip install django-runtime-autopilot
+pip install ./adapters/django
 ```
 
 Add to `INSTALLED_APPS`:
@@ -67,7 +69,7 @@ The adapter reads the profile on startup and is available in `AppConfig.ready()`
 ### FastAPI
 
 ```bash
-pip install fastapi-runtime-autopilot
+pip install "./adapters/fastapi[dev]" fastapi httpx
 ```
 
 ```python
@@ -92,7 +94,15 @@ def info(profile = Depends(get_runtime_profile)):
 composer require runtime-autopilot/laravel-autopilot
 ```
 
-The service provider is auto-discovered. Access the profile via the `Probe` facade:
+Add a path repository to your project's `composer.json`, then require it:
+
+```bash
+composer config repositories.autopilot \
+  '{"type": "path", "url": "/path/to/runtime-autopilot/adapters/laravel"}'
+composer require runtime-autopilot/laravel-autopilot:*
+```
+
+The service provider is auto-discovered. Access the profile via the `Probe` class:
 
 ```php
 use RuntimeAutopilot\Probe;
