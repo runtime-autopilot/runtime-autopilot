@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func ptr64(v int64) *int64       { return &v }
+func ptr64(v int64) *int64      { return &v }
 func ptrF64(v float64) *float64 { return &v }
 
 func TestSizeClass(t *testing.T) {

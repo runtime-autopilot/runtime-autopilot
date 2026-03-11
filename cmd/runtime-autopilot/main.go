@@ -55,7 +55,6 @@ func runServer(addr string, pretty bool) {
 		p := probe.Detect()
 		w.Header().Set("Content-Type", "application/json")
 		enc := json.NewEncoder(w)
-		
 		if pretty {
 			enc.SetIndent("", "  ")
 		}

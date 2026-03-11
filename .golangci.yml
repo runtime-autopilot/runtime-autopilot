@@ -7,29 +7,23 @@ linters:
     - errcheck
     - staticcheck
     - unused
-    - gosimple
     - ineffassign
+    - misspell
+
+formatters:
+  enable:
     - gofmt
     - goimports
-    - misspell
-    - revive
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/runtime-autopilot/runtime-autopilot
 
 linters-settings:
-  goimports:
-    local-prefixes: github.com/runtime-autopilot/runtime-autopilot
   errcheck:
-    # Blank-identifier assignments in cgroup detectors are intentional:
-    # if cgroup files are missing (bare-metal), nil is the correct result.
     check-blank: false
-  revive:
-    rules:
-      - name: exported
-        disabled: true  # don't require doc-comments on every exported symbol
 
 issues:
   exclude-rules:
-    # Allow (nil, nil) returns from detection helpers: signals "no limit found".
-    - linters: [govet]
-      text: "nilnil"
     - linters: [gosec]
       text: "G114"

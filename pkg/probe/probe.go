@@ -9,7 +9,7 @@ import (
 )
 
 type Detector interface {
-	Detect(profile profile.RuntimeProfile) profile.RuntimeProfile
+	Detect(p profile.RuntimeProfile) profile.RuntimeProfile
 }
 
 type Pipeline struct {
@@ -17,18 +17,16 @@ type Pipeline struct {
 }
 
 func NewPipeline(detectors ...Detector) Pipeline {
-	detector := make([]Detector, len(detectors))
-	copy(detector, detectors)
-
-	return Pipeline{detectors: detector}
+	d := make([]Detector, len(detectors))
+	copy(d, detectors)
+	return Pipeline{detectors: d}
 }
 
 func (p Pipeline) Run() profile.RuntimeProfile {
 	prof := profile.RuntimeProfile{}
-	for _, detector := range p.detectors {
-		prof = detector.Detect(prof)
+	for _, d := range p.detectors {
+		prof = d.Detect(prof)
 	}
-
 	return prof
 }
 
@@ -48,22 +46,20 @@ type MemoryDetector struct {
 	ReadFile cgroup.ReadFileFunc
 }
 
-func (detector MemoryDetector) Detect(profile profile.RuntimeProfile) profile.RuntimeProfile {
-	limit, _ := cgroup.MemoryLimitBytes(detector.ReadFile) //nolint:errcheck
-	profile.MemBytes = limit
-
-	return profile
+func (d MemoryDetector) Detect(p profile.RuntimeProfile) profile.RuntimeProfile {
+	limit, _ := cgroup.MemoryLimitBytes(d.ReadFile) //nolint:errcheck
+	p.MemBytes = limit
+	return p
 }
 
 type CPUDetector struct {
 	ReadFile cgroup.ReadFileFunc
 }
 
-func (detector CPUDetector) Detect(profile profile.RuntimeProfile) profile.RuntimeProfile {
-	cpus, _ := cgroup.CPUEffective(detector.ReadFile) //nolint:errcheck 
-	profile.CPUEffective = cpus
-
-	return profile
+func (d CPUDetector) Detect(p profile.RuntimeProfile) profile.RuntimeProfile {
+	cpus, _ := cgroup.CPUEffective(d.ReadFile) //nolint:errcheck
+	p.CPUEffective = cpus
+	return p
 }
 
 type PlatformDetector struct {
@@ -71,16 +67,16 @@ type PlatformDetector struct {
 	Stat     detect.StatFunc
 }
 
-func (detector PlatformDetector) Detect(platform profile.RuntimeProfile) profile.RuntimeProfile {
-	platform.Platform = detect.Platform(detector.ReadFile, detector.Stat)
-	return platform
+func (d PlatformDetector) Detect(p profile.RuntimeProfile) profile.RuntimeProfile {
+	p.Platform = detect.Platform(d.ReadFile, d.Stat)
+	return p
 }
 
 type RoleDetector struct{}
 
-func (detector RoleDetector) Detect(profile profile.RuntimeProfile) profile.RuntimeProfile {
-	profile.Role = detect.Role(os.Args)
-	return profile
+func (d RoleDetector) Detect(p profile.RuntimeProfile) profile.RuntimeProfile {
+	p.Role = detect.Role(os.Args)
+	return p
 }
 
 type FilesystemDetector struct {
@@ -88,9 +84,9 @@ type FilesystemDetector struct {
 	WorkDir string
 }
 
-func (detector FilesystemDetector) Detect(profile profile.RuntimeProfile) profile.RuntimeProfile {
-	readOnly, writable := detect.WritablePaths(detector.TmpDir, detector.WorkDir)
-	profile.RootReadOnly = readOnly
-	profile.WritablePaths = writable
-	return profile
+func (d FilesystemDetector) Detect(p profile.RuntimeProfile) profile.RuntimeProfile {
+	readOnly, writable := detect.WritablePaths(d.TmpDir, d.WorkDir)
+	p.RootReadOnly = readOnly
+	p.WritablePaths = writable
+	return p
 }
