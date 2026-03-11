@@ -1,0 +1,24 @@
+FROM php:8.3-cli
+
+WORKDIR /app
+
+# Install system deps needed by Composer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git unzip libzip-dev \
+    && docker-php-ext-install zip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Copy adapter source
+COPY . /adapters/laravel
+COPY runtime-autopilot /usr/local/bin/runtime-autopilot
+RUN chmod +x /usr/local/bin/runtime-autopilot
+
+# Install dependencies
+RUN cd /adapters/laravel && composer install --no-interaction --prefer-dist
+
+ENV RUNTIME_AUTOPILOT_BIN=runtime-autopilot
+
+CMD ["php", "/adapters/laravel/vendor/bin/phpunit", "/adapters/laravel/tests", "--testdox"]

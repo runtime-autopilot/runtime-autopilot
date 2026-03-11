@@ -5,7 +5,10 @@
 *.dll
 *.so
 *.dylib
-*.test
+# Compiled Go test binaries (e.g. internal/detect/detect.test)
+**/*.test
+!adapters/**/Dockerfile.test
+
 *.out
 coverage.out
 coverage.html

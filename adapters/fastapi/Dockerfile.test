@@ -1,0 +1,15 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY . /adapters/fastapi
+COPY runtime-autopilot /usr/local/bin/runtime-autopilot
+RUN chmod +x /usr/local/bin/runtime-autopilot
+
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+RUN pip install --no-cache-dir "/adapters/fastapi[dev]" fastapi[all] httpx
+
+ENV RUNTIME_AUTOPILOT_BIN=runtime-autopilot
+ENV PYTHONPATH=/adapters/fastapi
+
+CMD ["python", "-m", "pytest", "/adapters/fastapi/tests", "-v"]
