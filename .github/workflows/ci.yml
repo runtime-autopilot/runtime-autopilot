@@ -34,7 +34,7 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v7
         with:
-          version: v2.1.6
+          version: v2.11.3
 
   laravel-test:
     name: Laravel Tests (PHP 8.2)
