@@ -1,0 +1,36 @@
+{
+  "name": "runtime-autopilot/laravel-autopilot",
+  "description": "Laravel adapter for runtime-autopilot: auto-configures workers, caches, and logging based on container resource limits.",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": "^8.2",
+    "laravel/framework": "^11.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.0",
+    "laravel/pint": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "RuntimeAutopilot\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "RuntimeAutopilot\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "RuntimeAutopilot\\AutopilotServiceProvider"
+      ]
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
