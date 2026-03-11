@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-runtime-autopilot"
+version = "0.1.0"
+description = "Django adapter for runtime-autopilot: auto-configures logging, caching, and worker hints from container limits."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "django>=4.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-django>=4.8",
+    "pytest-mock>=3.12",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["runtime_autopilot*"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"

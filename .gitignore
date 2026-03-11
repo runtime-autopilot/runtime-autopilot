@@ -43,3 +43,5 @@ adapters/fastapi/.venv/
 .env
 .env.*
 !.env.example
+adapters/*/runtime-autopilot
+adapters/*/runtime-autopilot-linux
